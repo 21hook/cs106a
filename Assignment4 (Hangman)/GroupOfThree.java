@@ -19,25 +19,19 @@ public class GroupOfThree extends ConsoleProgram {
 		}
 	}
 	
-	private String addCommasToNumericString(String s) {
-		int len = s.length();
+	private String addCommasToNumericString(String digits) {
 		String result = "";
-		
-		if(len <= 3) return s;
-		for (int i=len-1; i>=0; i-=3 ) {
-			if (i>2) {
-				result ="," + s.substring(i-2, len) + result;		
-			} else {
-				if (len % 3 == 0) {
-					result = s.substring(0, 3) + result;
-				} else if (len % 3 == 2) {
-					result = s.substring(0, 2) + result;
-				} else {
-					result = s.substring(0, 1) + result;
-				}
-			}		
+		int len = digits.length();
+		int nDigits = 0;
+		for (int i = len - 1; i >= 0; i--) {
+		result = digits.charAt(i) + result;
+		nDigits++;
+		if (((nDigits % 3) == 0) && (i > 0)) {
+		result = "," + result;
+		}
 		}
 		return result;
-	}
+		}
+
 	
 }
