@@ -29,10 +29,11 @@ public class HangmanCanvas extends GCanvas {
  * been guessed so far; unguessed letters are indicated by hyphens.
  */
 	public void displayWord(String word) {
-		remove(label4GuessWord);
-		
+		if (label4GuessWord != null) remove(label4GuessWord);
+
 		label4GuessWord = new GLabel(word);
-		add(label4GuessWord);
+		//label4GuessWord.setFont("");
+		add(label4GuessWord, 50, 400);
 	}
 
 /**
@@ -52,10 +53,10 @@ public class HangmanCanvas extends GCanvas {
 	 * guesses that appears at the bottom of the window.
 	 */
 	private void updateChar(char ch) {
-		remove(label4WrongWord);
+		if (label4WrongWord != null) remove(label4WrongWord); // @ToDo Can't remove objects that do not exist before
 		
 		label4WrongWord = new GLabel(wrongWord += ch);
-		add(label4WrongWord);
+		add(label4WrongWord, 50, 420);
 	}
 	
 	/**
@@ -140,7 +141,7 @@ public class HangmanCanvas extends GCanvas {
 	// the number of wrong guesses users entered
 	private int wrongGuess = 0;
 	private String wrongWord = "";
-	private GLabel label4WrongWord;
-	private GLabel label4GuessWord;
+	private GLabel label4WrongWord = null;
+	private GLabel label4GuessWord = null;
 
 }

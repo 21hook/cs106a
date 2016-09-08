@@ -10,7 +10,7 @@ import acm.program.*;
 import acm.util.*;
 
 import java.awt.*;
-
+import java.util.*; // Class: ArrayList<type>
 import javax.xml.stream.events.Characters;
 
 public class Hangman extends ConsoleProgram {
@@ -20,94 +20,84 @@ public class Hangman extends ConsoleProgram {
 	
     // Initialize a hangman at the canvas 
     public void init() {
-    	 currentGuessWord = initCurrentGuessWord(currentGuessWord);
     	 canvas = new HangmanCanvas();
     	 add(canvas);
-    
-    	 //canvas.reset();
 	}
 
     // Run operations for the program
-    public void run() { 	
-    	/* Welcome to Hangman */ 
-    	println("Welocme to Hangman!");
+    public void run() {
+    	int len = lexicon.length();
+    	String ch;
+    	String currentGuessWords = "";
+    	ArrayList<String> lexiconList = new ArrayList<String>();
     	
-    	  	
-    	while (currentGuessWord.indexOf('-') >= 0 && count > 0) {
-    		ch = prompt4Hint();
-    		process4Char();
+ 
+    	for(int i=0; i<len; i++) {
+    		lexiconList.add(lexicon.charAt(i) + "");
+    		currentGuessWords += "-";
+    	}
+    	
+    	
+    	println("Welocme to Hangman!");
+    	canvas.reset(); // @ToDo
+    	
+    	while (currentGuessWords.indexOf("-") >= 0 && count > 0) { // Still being successful && unsuccessful 
+    		println("The word now looks like this: " + currentGuessWords);
+        	println("You have " + count + " guesses left.");
+	
+        	while(true) {
+            	ch = readLine("Your guesss: ");
+            	if (ch.length() == 1) break;  
+        	}
+        	
+        	currentGuessWords = processChar(ch.toUpperCase(), currentGuessWords, lexiconList); 
     	}
     	  	
-    	guessOrNot(currentGuessWord);
+    	finalResult(currentGuessWords);
 
     	
 	}
-
-    /**
-     * Prompt user hints for a new word	
-     * 
-     */
-    private char prompt4Hint() {
-		println("The word now looks like this: " + currentGuessWord);
-    	println("You have " + count + " guesses left.");
-    	String ch = readLine("Your guesss: ");
-    	
-    	
-    	while (ch.length() != 1) {
-    		println("You must enter a word."); 
-    		ch = readLine("Your guesss: ");
-    	}
-    	
-    	
-    	return ch.toUpperCase().charAt(0);
-    } 
     
     /**
-     * Process what kind of char users has entered
+     * If users guess correctly, Update `str` string.
      */
-    private void process4Char() {
+    private String processChar(String ch, String str, ArrayList<String> strLi) {
     	
-    	int pos = lexicon.indexOf(ch);
+    	int pos = strLi.indexOf(ch);
     	
     	if (pos == -1) {
     		println("There si no " + ch + "'s in the word.");
     		count--;
-    		canvas.noteIncorrectGuess(ch); // update body part & wrong words
+    		
+    		canvas.noteIncorrectGuess(ch.charAt(0)); // update body part & wrong words
     	} else {
-    		currentGuessWord = updateChar(currentGuessWord, pos, ch); // update guessed char 
-    		lexicon = removeOccuerence(pos); // replace a new char at the `pos` position
+    		str = updateChar(pos, str); // @ToDo Passing by copy
+    		strLi.set(pos, ch.toLowerCase()); // replace a new char at the `pos` position
     		println("Your guess is correct");
-    		canvas.displayWord(currentGuessWord); // Re-draw label for correct words
+    		
+    		canvas.displayWord(str); // Re-draw label for correct words
     	}
-    }
-    
-    private String initCurrentGuessWord(String str) {
-    	int len = lexicon.length();
-    	
-    	while(len-- > 0) {
-    		str += '-';
-    	}
+    	println(str + " " + strLi + " " + ch);
     	
     	return str;
     }
     
-    private String updateChar(String str, int index, char ch) {
-    	str = str.substring(0, index) + ch + str.substring(index+1);
-    	return str;
+    
+    /**
+     *  Update what users have guessed
+     */
+    private String updateChar(int index, String str) {
+    	return str.substring(0, index) + lexicon.charAt(index) 
+		+ str.substring(index+1);
     }
-
-    private String removeOccuerence(int index) {
-    	return lexicon.substring(0, index) + Character.toLowerCase(lexicon.charAt(index)) 
-    			+ lexicon.substring(index+1);
-    }
-     
+    
     
 	/**
-	 * Print out win or lose message according to `currentGuessWord`
+	 * Print out win or lose message
 	 */
-    private void guessOrNot(String str) {
+    private void finalResult(String str) {
     	if (str.indexOf('-') >= 0) {
-    		println("The word was: " + lexicon.toUpperCase());
+    		println("The word was: " + lexicon.toUpperCase()); 
     		println("You lose.");
     	}  else {
     		println("You guessed the word: " + lexicon.toUpperCase());
@@ -117,9 +107,8 @@ public class Hangman extends ConsoleProgram {
 
     
     // Instance variables for object states
-    private String currentGuessWord = "";
+    //private String currentGuessWord = ""; //
     private int count = REMAINING_CHANCES;
-    private char ch; // a new char users entered
     private HangmanCanvas canvas;
     private RandomGenerator rgen = RandomGenerator.getInstance();
     private String lexicon = new HangmanLexicon().getWord(rgen.nextInt(0, 9));
