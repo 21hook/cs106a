@@ -9,6 +9,8 @@ import acm.program.*;
 public class Mystery extends ConsoleProgram {
 	public void run() {
 		ghost(13);
+		Rational ration = new Rational();
+		println(ration);
 	}
 	
 	private void ghost(int x) {
