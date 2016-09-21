@@ -18,7 +18,7 @@ private static final double FACE_DIAM = 30;
 	
 	// This method is called everytime user clicks mouse
 	public void mouseClicked(MouseEvent e) {
-	GFace face = new GFace(FACE_DIAM, FACE_DIAM);
-	add(face, e.getX(), e.getY());
+		GFace face = new GFace(FACE_DIAM, FACE_DIAM);
+		add(face, e.getX(), e.getY());
 	}
 }

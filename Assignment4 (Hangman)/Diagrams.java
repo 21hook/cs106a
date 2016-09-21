@@ -14,9 +14,10 @@ public class Diagrams extends ConsoleProgram {
 	}
 	
 	private Rational raiseToPower(Rational x, int n) {
-		 Rational result = new Rational(1); 
+		 Rational result = new Rational(1);
+		 
 		 for (int i = 0; i < n; i++) {
-		 result = result.multiply(x);
+			 result = result.multiply(x);
 		 } // `result` variable in the heap are garbage at this point in the calculation.
 		 return result;
 	}
